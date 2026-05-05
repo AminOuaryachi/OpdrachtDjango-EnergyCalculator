@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Energieverbruik Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        h1 {
+            color: #e67e22;
+            text-align: center;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        form {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 12px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #cf6d17;
+        }
+        .result {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .result p {
+            font-size: 18px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        th {
+            background-color: #e67e22;
+            color: white;
+            padding: 10px;
+        }
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        tr:hover {
+            background-color: #fef9f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚡ Energieverbruik Calculator</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <label>Vermogen (Watt):</label>
+        <input type="number" name="vermogen" placeholder="bv. 1000" required>
+        
+        <label>Uren per dag:</label>
+        <input type="number" name="uren_per_dag" placeholder="bv. 8" required>
+        
+        <label>Prijs per kWh (€):</label>
+        <input type="number" name="prijs_kwh" step="0.01" value="0.30" required>
+        
+        <button type="submit">⚡ Bereken</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <h2>Resultaat:</h2>
+        <p>⚡ Verbruik per dag: <strong>{{ result.verbruik }} kWh</strong></p>
+        <p>💶 Kost per maand: <strong>€{{ result.kost }}</strong></p>
+    </div>
+    {% endif %}
+
+    <h2>Geschiedenis:</h2>
+    <table>
+        <tr>
+            <th>Vermogen</th>
+            <th>Uren/dag</th>
+            <th>kWh/dag</th>
+            <th>€/maand</th>
+        </tr>
+        {% for item in history %}
+        <tr>
+            <td>{{ item.vermogen }}W</td>
+            <td>{{ item.uren_per_dag }}u</td>
+            <td>{{ item.verbruik_per_dag }}kWh</td>
+            <td>€{{ item.kost_per_maand }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
